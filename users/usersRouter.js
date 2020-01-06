@@ -13,15 +13,9 @@ router.put('/:id/tickets/', auth,(req, res) => {
   });
   router.get('/', auth,(req, res) => {
     
-   db.openTickets()
+   db.getUser(req.body.username)
    .then(i => {
-     if(i.completed == 0){
-       i.completed = false
-     }
-     else{
-       i.completed = true
-     }
-   res.status(201).json(i);
+   res.status(200).json(i)
    })
    .catch(err => {
    res.status(500).json({ message: 'Failed to get schemes' });

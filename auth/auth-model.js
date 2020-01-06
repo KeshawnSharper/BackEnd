@@ -11,7 +11,7 @@ const db = require('../dbConfig');
        return db("users").select("id","username").where(user.username)
    }
    function getUser(user){
-       return db("users").where({"username":user})
+       return db("users").select("id","username","role").where({"username":user})
    }
    function assignTicket(id,helper){
        return db("tickets").where({"id":id}).update({"helper_id":helper})
