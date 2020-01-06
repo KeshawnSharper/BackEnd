@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const db = require("../auth/auth-model")
 const auth = require("../auth/authenicate-middleware")
-router.put('/:id/tickets/', auth,(req, res) => {
-   const ticket = req.body.ticket_id
-  db.assignTicket(ticket,req.params.id)
+router.put('/:id', auth,(req, res) => {
+   
+  db.editUser(req.params.id,req.body)
   .then(i => {
   res.status(201).json(i);
   })
@@ -11,9 +11,9 @@ router.put('/:id/tickets/', auth,(req, res) => {
   res.status(500).json({ message: 'Failed to get schemes' });
   });
   });
-  router.get('/', auth,(req, res) => {
+  router.get('/:id', auth,(req, res) => {
     
-   db.getUser(req.body.username)
+   db.getUser(req.params.id)
    .then(i => {
    res.status(200).json(i)
    })
@@ -21,6 +21,16 @@ router.put('/:id/tickets/', auth,(req, res) => {
    res.status(500).json({ message: 'Failed to get schemes' });
    });
    });
+   router.get('/all', auth,(req, res) => {
+    
+    db.getUsers()
+    .then(i => {
+    res.status(200).json(i)
+    })
+    .catch(err => {
+    res.status(500).json({ message: 'Failed to get schemes' });
+    });
+    });
    router.get('/helpertickets', auth,(req, res) => {
     
     db.helperTickets(req.body.helper_id)
@@ -41,7 +51,17 @@ router.put('/:id/tickets/', auth,(req, res) => {
       res.status(500).json({ message: 'Failed to get schemes' });
       });
       });
-   
+      router.delete('/:id', auth,(req, res) => {
+    
+        db.deleteUser(req.params.id)
+        .then(i => {
+        res.status(200).json(i);
+        })
+        .catch(err => {
+        res.status(500).json({ message: 'Failed to get schemes' });
+        });
+        });
+        
 
 
   module.exports = router;

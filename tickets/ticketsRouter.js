@@ -10,6 +10,15 @@ const auth = require("../auth/authenicate-middleware")
    res.status(500).json({ message: 'Failed to get schemes' });
    });
    });
+   router.get('/:id', auth,(req, res) => {
+    db.getTicket(req.params.id)
+    .then(i => {
+    res.status(200).json(i);
+    })
+    .catch(err => {
+    res.status(500).json({ message: 'Failed to get schemes' });
+    });
+    });
    router.post('/', auth,(req, res) => {
        req.body.helper_id = null
        req.body.completed = false
@@ -24,8 +33,8 @@ const auth = require("../auth/authenicate-middleware")
     res.status(500).json({ message: err });
     });
     });
-    router.put('/', auth,(req, res) => {
-        db.editTicket(req.body.id,req.body)
+    router.put('/:id', auth,(req, res) => {
+        db.editTicket(req.params.id,req.body)
         .then(i => {
         res.status(200).json(i);
         })

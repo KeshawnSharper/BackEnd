@@ -1,17 +1,17 @@
 const db = require('../dbConfig');
 
     function getUsers(){
-    return db("users").select("id","username")
+    return db("users").select("*")
     }
     function register(user){
     return db("users").insert(user)
     }
     function login(user)
    { 
-       return db("users").select("id","username").where(user.username)
+       return db("users").where({"username":user.username})
    }
    function getUser(user){
-       return db("users").select("id","username","role").where({"username":user})
+       return db("users").select("id","username","role").where({"id":user})
    }
    function assignTicket(id,helper){
        return db("tickets").where({"id":id}).update({"helper_id":helper})
@@ -19,6 +19,15 @@ const db = require('../dbConfig');
    function openTickets(){
        return db("tickets").select("*")
        .then(tickets => {
+        return tickets.map(ticket => {
+            ticket.completed = ticket.completed ? true :false
+            ticket.open = ticket.open ? true :false
+            return ticket
+        })
+    })
+   }
+   function getTicket(id){
+       return db("tickets").where({"id":id}).then(tickets => {
         return tickets.map(ticket => {
             ticket.completed = ticket.completed ? true :false
             ticket.open = ticket.open ? true :false
@@ -55,6 +64,13 @@ const db = require('../dbConfig');
   function deleteTicket(ticket){
     return db("tickets").where({"id":ticket}).del()
   }
+  function deleteUser(id){
+    return db("users").where({"id":id}).del()
+  }
+  function editUser(id,user){
+      return db("users").where({"id":id}).update(user)
+  }
+
 
 module.exports = {
     getUsers,
@@ -67,5 +83,8 @@ module.exports = {
     studentTickets,
     createTicket,
     editTicket,
-    deleteTicket
+    deleteTicket,
+    editUser,
+    deleteUser,
+    getTicket
 }
